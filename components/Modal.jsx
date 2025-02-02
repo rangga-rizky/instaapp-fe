@@ -40,6 +40,7 @@ const Modal = ({ isOpen, onClose, children }) => {
           top: 10px;
           right: 10px;
           background: none;
+          color: grey;
           border: none;
           font-size: 24px;
           cursor: pointer;

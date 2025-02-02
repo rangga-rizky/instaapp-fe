@@ -28,6 +28,14 @@ export interface Post {
     updated_at: string;
 }
 
+export interface Reply {
+    id: number;
+    message: string;
+    user: User;
+    created_at: string;
+    updated_at: string;
+}
+
 export interface RegisterResponse {
     data: User;
     access_token: string;

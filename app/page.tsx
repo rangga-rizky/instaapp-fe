@@ -8,6 +8,7 @@ import CreatePostForm from './CreatePostForm';
 import { getPosts, logout } from './helper/api';
 import { Post } from './helper/model';
 import { formatDistanceToNow } from 'date-fns';
+import PostDetail from './PostDetail';
 
 export default function Page() {
   const router = useRouter();
@@ -49,8 +50,7 @@ export default function Page() {
   };
 
   const handleComment = (postId: number) => {
-    // Todo: Implement comment functionality here
-    console.log(`Comment on post ${postId}`);
+    handleOpenModal('POST-DETAIL');
   };
 
   const loadPosts = async () => {
@@ -111,6 +111,10 @@ export default function Page() {
       <Modal isOpen={isModelOpen('CREATE-POST')} onClose={handleCLoseModal}>
         <h2>Create a new Post</h2>
         <CreatePostForm onPostCreated={handleNewPostCreated}/>
+      </Modal>
+      <Modal isOpen={isModelOpen('POST-DETAIL')} onClose={handleCLoseModal}>
+        <h2>What they said...</h2>
+        <PostDetail/>
       </Modal>
     </div>
   );
