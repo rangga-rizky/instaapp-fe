@@ -5,28 +5,13 @@ import { useRouter } from 'next/navigation'
 import Modal from '@/components/Modal';
 import styles from '@/app/style.module.css';
 import CreatePostForm from './CreatePostForm';
-import { logout } from './helper/api';
-
-const mockPosts = [
-  {
-    id: 1,
-    imageUrl: 'https://via.placeholder.com/150',
-    likes: 120,
-    loved: true,
-    replies: ['Great post!', 'Nice picture!']
-  },
-  {
-    id: 2,
-    imageUrl: 'https://via.placeholder.com/150',
-    likes: 80,
-    loved: false,
-    replies: ['Awesome!', 'Love it!']
-  },
-];
+import { getPosts, logout } from './helper/api';
+import { Post } from './helper/model';
+import { formatDistanceToNow } from 'date-fns';
 
 export default function Page() {
   const router = useRouter();
-  const [posts, setPosts] = useState(mockPosts);
+  const [posts, setPosts] = useState<Post[]>([]);
   const [page, setPage] = useState(1);
   const [modalOpen, setModalOpen] = useState(null);
 
@@ -43,25 +28,36 @@ export default function Page() {
   };
 
   const handleOpenCreatePostModal = () => {
-    console.log('Create post modal opened');
     handleOpenModal('CREATE-POST');
   };
 
   const loadMorePosts = () => {
-    const newPosts = mockPosts.map(post => ({ ...post, id: post.id + page * mockPosts.length }));
-    setPosts(prevPosts => [...prevPosts, ...newPosts]);
-    setPage(prevPage => prevPage + 1);
+    //const newPosts = mockPosts.map(post => ({ ...post, id: post.id + page * mockPosts.length }));
+    //setPosts(prevPosts => [...prevPosts, ...newPosts]);
+    //setPage(prevPage => prevPage + 1);
   };
 
+  const handleNewPostCreated = (newPost) => {
+    setPosts([newPost, ...posts]);
+    handleCLoseModal();
+  }
+
   const handleLoveToggle = (postId: number) => {
-    setPosts(posts.map(post => 
-      post.id === postId ? { ...post, loved: !post.loved, likes: post.loved ? post.likes - 1 : post.likes + 1 } : post
-    ));
+    //setPosts(posts.map(post => 
+    //  post.id === postId ? { ...post, loved: !post.loved, likes: post.loved ? post.likes - 1 : post.likes + 1 } : post
+    //));
   };
 
   const handleComment = (postId: number) => {
     // Todo: Implement comment functionality here
     console.log(`Comment on post ${postId}`);
+  };
+
+  const loadPosts = async () => {
+    const response = await getPosts()
+    .then(response =>{
+      setPosts(response)
+    })
   };
 
   const handleLogout = async () => {
@@ -76,7 +72,7 @@ export default function Page() {
     if (!localStorage.getItem('token')) {
       router.push('/auth/login');
     }
-
+    loadPosts();
     const handleScroll = () => {
       if (window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight) {
         loadMorePosts();
@@ -96,21 +92,25 @@ export default function Page() {
       <button onClick={handleOpenCreatePostModal} className={styles.primaryButton}>Create New Post</button>
       {posts.map(post => (
         <div key={post.id} className={styles.post}>
-          <img src={post.imageUrl} alt="Post" />
-          <div className={styles.caption}>this is post caption</div>
+          <div className={styles.postHeader}>
+            <span className={styles.postAuthor}>by {post.user?.name}</span>
+            <span className={styles.postTime}>{formatDistanceToNow(new Date(post.created_at))} ago</span>
+          </div>
+          <img src={post.image_url} alt="Post" />
+          <div className={styles.caption}>{post.caption}</div>
           <div className={styles.likes}>
-            <button onClick={() => handleLoveToggle(post.id)} className={`${styles.likeButton} ${post.loved ? styles.loved : ''}`}>
+            <button onClick={() => handleLoveToggle(post.id)} className={`${styles.likeButton} ${post.id ? styles.loved : ''}`}>
               ❤️ 
-            </button> {post.likes}
+            </button> {post.likes_count}
             <button onClick={() => handleComment(post.id)} className={styles.commentButton}>
               💬
-            </button> {post.replies.length}
+            </button> {post.replies_count}
           </div>
         </div>
       ))}
       <Modal isOpen={isModelOpen('CREATE-POST')} onClose={handleCLoseModal}>
         <h2>Create a new Post</h2>
-        <CreatePostForm />
+        <CreatePostForm onPostCreated={handleNewPostCreated}/>
       </Modal>
     </div>
   );

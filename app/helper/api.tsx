@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LoginRequest, LoginResponse, RegisterRequest, RegisterResponse } from "./model";
+import { LoginRequest, LoginResponse, Post, RegisterRequest, RegisterResponse } from "./model";
 
 
 const protectedApiClient = axios.create({
@@ -45,3 +45,27 @@ export async function logout() {
   return response.data;
 }
 
+export async function getPosts(): Promise<Post[]> {
+  const response = await protectedApiClient.get(
+    `${process.env.NEXT_PUBLIC_INSTAAPP_SERVICE_URL}/api/posts`
+  )
+  return response.data.data;
+}
+
+export async function createPost(imageFile: File, caption: string): Promise<Post> {
+  const formData = new FormData();
+  formData.append('image', imageFile);
+  formData.append('caption', caption);
+
+  const response = await protectedApiClient.post(
+    `${process.env.NEXT_PUBLIC_INSTAAPP_SERVICE_URL}/api/posts`,
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }
+  );
+
+  return response.data.data;
+}

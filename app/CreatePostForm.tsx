@@ -1,16 +1,25 @@
 import React, { useState } from 'react';
 import styles from '@/app/style.module.css';
+import { createPost } from './helper/api';
 
-interface CreatePostFormProps {}
+interface CreatePostFormProps {
+  onPostCreated;
+}
 
-const CreatePostForm: React.FC<CreatePostFormProps> = ({ }) => {
+const CreatePostForm: React.FC<CreatePostFormProps> = ({onPostCreated }) => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [caption, setCaption] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setImageFile(null);
-    setCaption('');
+    if (!imageFile) return;
+    const response = await createPost(imageFile, caption)
+    .then(response =>{
+      onPostCreated(response)
+    })
+    .catch(err => {
+
+    });
   };
 
   return (

@@ -17,6 +17,17 @@ export interface User {
     updated_at: string;
 }
 
+export interface Post {
+    id: number;
+    caption: string;
+    image_url: string;
+    user: User;
+    likes_count: number;
+    replies_count: number;
+    created_at: string;
+    updated_at: string;
+}
+
 export interface RegisterResponse {
     data: User;
     access_token: string;
