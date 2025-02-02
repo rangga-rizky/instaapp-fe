@@ -9,7 +9,7 @@ import { getPosts, like, logout, unlike } from './helper/api';
 import { Post } from './helper/model';
 import { formatDistanceToNow } from 'date-fns';
 import PostDetail from './PostDetail';
-import { POST_RESOURCE_TYPE } from './constant';
+import { CREATE_POST_MODAL, POST_DETAIL_MODAL, POST_RESOURCE_TYPE } from './constant';
 
 export default function Page() {
   const router = useRouter();
@@ -31,7 +31,7 @@ export default function Page() {
   };
 
   const handleOpenCreatePostModal = () => {
-    handleOpenModal('CREATE-POST');
+    handleOpenModal(CREATE_POST_MODAL);
   };
 
   const loadMorePosts = () => {
@@ -60,7 +60,7 @@ export default function Page() {
   };
 
   const handleComment = (postId: number) => {
-    handleOpenModal('POST-DETAIL');
+    handleOpenModal(POST_DETAIL_MODAL);
     setActivePostId(postId);
   };
 
@@ -126,11 +126,11 @@ export default function Page() {
           </div>
         </div>
       ))}
-      <Modal isOpen={isModelOpen('CREATE-POST')} onClose={handleCLoseModal}>
+      <Modal isOpen={isModelOpen(CREATE_POST_MODAL)} onClose={handleCLoseModal}>
         <h2>Create a new Post</h2>
         <CreatePostForm onPostCreated={handleNewPostCreated}/>
       </Modal>
-      <Modal isOpen={isModelOpen('POST-DETAIL')} onClose={handleCLoseModal}>
+      <Modal isOpen={isModelOpen(POST_DETAIL_MODAL)} onClose={handleCLoseModal}>
         <h2>What they said...</h2>
         <PostDetail id={activePostId}/>
       </Modal>
