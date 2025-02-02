@@ -28,7 +28,7 @@ export default function Page() {
     const response = await registerUser(req)
     .then(response =>{
       setLoading(false)
-      
+      router.push('/auth/login');
     })
     .catch(err => {
       setLoading(false)
@@ -36,6 +36,12 @@ export default function Page() {
       setError(errMessage);
     });
   };
+
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      router.push('/');
+    }
+  }, []);
 
   useEffect(() => {
     if (error != '') {

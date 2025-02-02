@@ -1,9 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation'
 import Modal from '@/components/Modal';
 import styles from '@/app/style.module.css';
 import CreatePostForm from './CreatePostForm';
+import { logout } from './helper/api';
 
 const mockPosts = [
   {
@@ -23,6 +25,7 @@ const mockPosts = [
 ];
 
 export default function Page() {
+  const router = useRouter();
   const [posts, setPosts] = useState(mockPosts);
   const [page, setPage] = useState(1);
   const [modalOpen, setModalOpen] = useState(null);
@@ -61,12 +64,19 @@ export default function Page() {
     console.log(`Comment on post ${postId}`);
   };
 
-  const handleLogout = () => {
-    // Todo: Implement logout functionality here
-    console.log('User logged out');
+  const handleLogout = async () => {
+    const response = await logout()
+    .then(response =>{
+      localStorage.removeItem(`token`)
+      router.push('/auth/login');
+    })
   };
 
   useEffect(() => {
+    if (!localStorage.getItem('token')) {
+      router.push('/auth/login');
+    }
+
     const handleScroll = () => {
       if (window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight) {
         loadMorePosts();

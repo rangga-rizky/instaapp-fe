@@ -35,5 +35,13 @@ export async function login(request: LoginRequest): Promise<LoginResponse> {
     `${process.env.NEXT_PUBLIC_INSTAAPP_SERVICE_URL}/api/login`,
     request
   )
-  return response.data.data;
+  return response.data;
 }
+
+export async function logout() {
+  const response = await protectedApiClient.post(
+    `${process.env.NEXT_PUBLIC_INSTAAPP_SERVICE_URL}/api/logout`
+  )
+  return response.data;
+}
+

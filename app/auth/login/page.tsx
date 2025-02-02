@@ -23,8 +23,8 @@ export default function Page() {
 
     const response = await login(req)
     .then(response =>{
-      //localStorage.setItem('token', response.access_token)
-      console.log(response);
+      localStorage.setItem('token', response.access_token)
+      router.push('/');
     })
     .catch(err => {
       setError(err.response.data.message);
@@ -32,9 +32,9 @@ export default function Page() {
   };
 
   useEffect(() => {
-    //if (localStorage.getItem('token')) {
-    //  router.push('/');
-    //}
+    if (localStorage.getItem('token')) {
+      router.push('/');
+    }
   }, []);
 
   useEffect(() => {
