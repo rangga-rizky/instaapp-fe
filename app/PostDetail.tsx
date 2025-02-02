@@ -1,45 +1,49 @@
-import React, { useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import styles from '@/app/PostDetail.module.css';
 import { formatDistanceToNow } from 'date-fns';
-
-const mockPost = {
-  id: 2,
-  name: 'Jane Smith',
-  created_at: new Date().toISOString(),
-  image_url: 'https://via.placeholder.com/150',
-  replies: [
-    { id: 3, user: {name: 'Charlie'}, message: 'Awesome!', created_at: new Date().toISOString() },
-    { id: 4, user: {name: 'Dave'}, message: 'Love it!', created_at: new Date().toISOString() },
-    { id: 3, user: {name: 'Charlie'}, message: 'Awesome!', created_at: new Date().toISOString() },
-    { id: 3, user: {name: 'Charlie'}, message: 'Awesome!', created_at: new Date().toISOString() },
-    { id: 3, user: {name: 'Charlie'}, message: 'Awesome!', created_at: new Date().toISOString() },
-    { id: 3, user: {name: 'Charlie'}, message: 'Awesome!', created_at: new Date().toISOString() },
-    { id: 3, user: {name: 'Charlie'}, message: 'Awesome!', created_at: new Date().toISOString() },
-    { id: 3, user: {name: 'Charlie'}, message: 'Awesome!', created_at: new Date().toISOString() },
-    { id: 3, user: {name: 'Charlie'}, message: 'Awesome!', created_at: new Date().toISOString() },
-    { id: 3, user: {name: 'Charlie'}, message: 'Awesome!', created_at: new Date().toISOString() },
-  ]
-};
+import { Post, Reply, ReplyRequest } from './helper/model';
+import { createReply, getPost } from './helper/api';
 
 interface PostDetailProps {
-
+  id: number
 }
 
-const PostDetail: React.FC<PostDetailProps> = ({ }) => {
+const PostDetail: React.FC<PostDetailProps> = ({id}) => {
+  const [post, setPost] = useState<Post>();
   const [newReply, setNewReply] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setNewReply('');
+    
+    const req: ReplyRequest = { 
+      message: newReply,
+      post_id: id
+    };
+    const response = await createReply(req)
+    .then(response =>{
+      post?.replies.push(response);
+      setNewReply("")
+    })
   };
 
+  const loadPosts = async (id) => {
+    const response = await getPost(id)
+    .then(response =>{
+      setPost(response)
+    })
+  };
+  
+  useEffect(() => {
+    loadPosts(id);
+  }, [id]);
+  
   return (
     <div className={styles.repliesContainer}>
       <div className={styles.repliesList}>
-        {mockPost.replies.map(reply => (
+        {post?.replies.map(reply => (
           <div key={reply.id} className={styles.replyItem}>
             <div className={styles.replyHeader}>
-              <span className={styles.replyUsername}>{reply.user.name}</span>
+              <span className={styles.replyUsername}>{reply?.user?.name}</span>
               <span className={styles.replyTime}>{formatDistanceToNow(new Date(reply.created_at))} ago</span>
             </div>
             <div className={styles.replyText}>{reply.message}</div>

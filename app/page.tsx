@@ -13,6 +13,7 @@ import PostDetail from './PostDetail';
 export default function Page() {
   const router = useRouter();
   const [posts, setPosts] = useState<Post[]>([]);
+  const [activePostId, setActivePostId] = useState(0);
   const [page, setPage] = useState(1);
   const [modalOpen, setModalOpen] = useState(null);
 
@@ -51,6 +52,7 @@ export default function Page() {
 
   const handleComment = (postId: number) => {
     handleOpenModal('POST-DETAIL');
+    setActivePostId(postId);
   };
 
   const loadPosts = async () => {
@@ -114,7 +116,7 @@ export default function Page() {
       </Modal>
       <Modal isOpen={isModelOpen('POST-DETAIL')} onClose={handleCLoseModal}>
         <h2>What they said...</h2>
-        <PostDetail/>
+        <PostDetail id={activePostId}/>
       </Modal>
     </div>
   );

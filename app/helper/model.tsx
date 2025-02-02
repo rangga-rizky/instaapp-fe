@@ -24,6 +24,7 @@ export interface Post {
     user: User;
     likes_count: number;
     replies_count: number;
+    replies: Reply[];
     created_at: string;
     updated_at: string;
 }
@@ -34,6 +35,11 @@ export interface Reply {
     user: User;
     created_at: string;
     updated_at: string;
+}
+
+export interface ReplyRequest {
+    post_id: number;
+    message: string;
 }
 
 export interface RegisterResponse {
