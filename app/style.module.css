@@ -1,0 +1,87 @@
+.container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #2C3E50;
+  color: white;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.logoutButton {
+  background-color: #b83c3c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.logoutButton:hover {
+  background-color: #cc0000;
+}
+
+.createPostButton {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.createPostButton:hover {
+  background-color: #0056b3;
+}
+
+.post {
+  border: 1px solid #ddd;
+  margin-bottom: 20px;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.post img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.caption {
+  margin-top: 5px;
+}
+
+.likes, .replies {
+  margin-top: 10px;
+}
+
+.likeButton, .commentButton {
+  margin-left: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.likeButton:hover, .commentButton:hover {
+  color: #ff0000;
+}
+
+.loved {
+  color: #ff0000;
+}
