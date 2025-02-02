@@ -25,6 +25,7 @@ export interface Post {
     likes_count: number;
     replies_count: number;
     replies: Reply[];
+    is_liked_by_user: boolean;
     created_at: string;
     updated_at: string;
 }

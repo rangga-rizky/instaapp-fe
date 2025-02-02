@@ -5,10 +5,11 @@ import { useRouter } from 'next/navigation'
 import Modal from '@/components/Modal';
 import styles from '@/app/style.module.css';
 import CreatePostForm from './CreatePostForm';
-import { getPosts, logout } from './helper/api';
+import { getPosts, like, logout, unlike } from './helper/api';
 import { Post } from './helper/model';
 import { formatDistanceToNow } from 'date-fns';
 import PostDetail from './PostDetail';
+import { POST_RESOURCE_TYPE } from './constant';
 
 export default function Page() {
   const router = useRouter();
@@ -44,10 +45,18 @@ export default function Page() {
     handleCLoseModal();
   }
 
-  const handleLoveToggle = (postId: number) => {
-    //setPosts(posts.map(post => 
-    //  post.id === postId ? { ...post, loved: !post.loved, likes: post.loved ? post.likes - 1 : post.likes + 1 } : post
-    //));
+  const handleLoveToggle = async (postId: number, isLiked: boolean) => {
+    if (isLiked) { 
+      const response = await unlike(POST_RESOURCE_TYPE, postId)
+      .then(response =>{
+
+      })
+    } else {
+      const response = await like(POST_RESOURCE_TYPE, postId)
+      .then(response =>{
+
+      })
+    }
   };
 
   const handleComment = (postId: number) => {
@@ -101,8 +110,15 @@ export default function Page() {
           <img src={post.image_url} alt="Post" />
           <div className={styles.caption}>{post.caption}</div>
           <div className={styles.likes}>
-            <button onClick={() => handleLoveToggle(post.id)} className={`${styles.likeButton} ${post.id ? styles.loved : ''}`}>
-              ❤️ 
+            <button onClick={() => handleLoveToggle(post.id, post.is_liked_by_user)} className={`${styles.likeButton} ${post.is_liked_by_user ? styles.loved : ''}`}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className={styles.likeIcon}
+              >
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+              </svg>
             </button> {post.likes_count}
             <button onClick={() => handleComment(post.id)} className={styles.commentButton}>
               💬

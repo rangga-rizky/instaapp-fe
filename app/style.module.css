@@ -94,10 +94,16 @@
   font-size: 16px;
 }
 
-.likeButton:hover, .commentButton:hover {
-  color: #ff0000;
+.likeButton:hover {
+  fill: #ff0000;
 }
 
-.loved {
-  color: #ff0000;
+.likeIcon {
+  width: 16px;
+  height: 16px;
+  fill: #888;
+}
+
+.loved .likeIcon {
+  fill: #ff0000;
 }

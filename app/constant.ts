@@ -1,0 +1,1 @@
+export const POST_RESOURCE_TYPE = `post`;

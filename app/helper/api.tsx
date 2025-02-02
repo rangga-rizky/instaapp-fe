@@ -67,6 +67,20 @@ export async function createReply(request: ReplyRequest): Promise<Reply> {
   return response.data.data;
 }
 
+export async function like(resource: string, id): Promise<Reply> {
+  const response = await protectedApiClient.post(
+    `${process.env.NEXT_PUBLIC_INSTAAPP_SERVICE_URL}/api/likes/${resource}/${id}`,
+  )
+  return response.data;
+}
+
+export async function unlike(resource: string, id): Promise<Reply> {
+  const response = await protectedApiClient.delete(
+    `${process.env.NEXT_PUBLIC_INSTAAPP_SERVICE_URL}/api/likes/${resource}/${id}`,
+  )
+  return response.data;
+}
+
 export async function createPost(imageFile: File, caption: string): Promise<Post> {
   const formData = new FormData();
   formData.append('image', imageFile);
