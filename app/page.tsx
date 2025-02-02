@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Modal from '@/components/Modal';
 import styles from '@/app/style.module.css';
+import CreatePostForm from './CreatePostForm';
 
 const mockPosts = [
   {
@@ -23,22 +25,29 @@ const mockPosts = [
 export default function Page() {
   const [posts, setPosts] = useState(mockPosts);
   const [page, setPage] = useState(1);
+  const [modalOpen, setModalOpen] = useState(null);
+
+  const isModelOpen = (modalID) => {
+    return modalOpen === modalID
+  };
+
+  const handleOpenModal = (modalID) => {
+    setModalOpen(modalID);
+  };
+
+  const handleCLoseModal = () => {
+    setModalOpen(null);
+  };
+
+  const handleOpenCreatePostModal = () => {
+    console.log('Create post modal opened');
+    handleOpenModal('CREATE-POST');
+  };
 
   const loadMorePosts = () => {
     const newPosts = mockPosts.map(post => ({ ...post, id: post.id + page * mockPosts.length }));
     setPosts(prevPosts => [...prevPosts, ...newPosts]);
     setPage(prevPage => prevPage + 1);
-  };
-
-  const createNewPost = () => {
-    const newPost = {
-      id: posts.length + 1,
-      imageUrl: 'https://via.placeholder.com/150',
-      likes: 0,
-      loved: false,
-      replies: []
-    };
-    setPosts([newPost, ...posts]);
   };
 
   const handleLoveToggle = (postId: number) => {
@@ -74,7 +83,7 @@ export default function Page() {
         <h1 className={styles.logo}>InstaApp</h1>
         <button onClick={handleLogout} className={styles.logoutButton}>Logout</button>
       </nav>
-      <button onClick={createNewPost} className={styles.createPostButton}>Create New Post</button>
+      <button onClick={handleOpenCreatePostModal} className={styles.primaryButton}>Create New Post</button>
       {posts.map(post => (
         <div key={post.id} className={styles.post}>
           <img src={post.imageUrl} alt="Post" />
@@ -89,6 +98,10 @@ export default function Page() {
           </div>
         </div>
       ))}
+      <Modal isOpen={isModelOpen('CREATE-POST')} onClose={handleCLoseModal}>
+        <h2>Create a new Post</h2>
+        <CreatePostForm />
+      </Modal>
     </div>
   );
 }

@@ -34,7 +34,7 @@
   background-color: #cc0000;
 }
 
-.createPostButton {
+.primaryButton {
   display: block;
   margin: 20px auto;
   padding: 10px 20px;
@@ -45,7 +45,7 @@
   cursor: pointer;
 }
 
-.createPostButton:hover {
+.primaryButton:hover {
   background-color: #0056b3;
 }
 
@@ -84,4 +84,22 @@
 
 .loved {
   color: #ff0000;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-top: 5px;
 }
