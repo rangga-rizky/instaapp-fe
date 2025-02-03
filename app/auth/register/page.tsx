@@ -84,7 +84,7 @@ export default function Page() {
         <button type="submit" disabled={isLoading}>Register</button>
       </form>
       
-      {success!='' && <p>Registration success. <b><a href="/auth/login">Login</a></b> </p>}
+      {success && <p>Registration success. <b><a href="/auth/login">Login</a></b> </p>}
       {error!='' && <ErrorMessage message={error} />}
     </div>
   );
