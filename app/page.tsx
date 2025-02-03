@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation'
 import Modal from '@/components/Modal';
 import styles from '@/app/style.module.css';
@@ -19,6 +19,7 @@ export default function Page() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [activePostId, setActivePostId] = useState(0);
   const [modalOpen, setModalOpen] = useState(null);
+  const postIds = useRef(new Set());
 
   const isModelOpen = (modalID) => {
     return modalOpen === modalID
@@ -42,20 +43,27 @@ export default function Page() {
     }
     await getPosts(paginationLimit, nextCursor)
     .then(response =>{
-      setPosts(prevPosts => [...prevPosts, ...response.data]);
+      const newPosts = response.data.filter(post => !postIds.current.has(post.id));
+      newPosts.forEach(post => postIds.current.add(post.id));
+      setPosts(prevPosts => [...prevPosts, ...newPosts]);
       nextCursor = response.next_cursor
     })
   };
 
   const handleNewPostCreated = (newPost) => {
-    setPosts([newPost, ...posts]);
+    if (!postIds.current.has(newPost.id)) {
+      postIds.current.add(newPost.id);
+      setPosts([newPost, ...posts]);
+    }
     handleCLoseModal();
   }
 
   const loadPosts = async (paginationLimit, nextCursor) => {
     const response = await getPosts(paginationLimit, nextCursor)
     .then(response =>{
-      setPosts(response.data)
+      const newPosts = response.data;
+      newPosts.forEach(post => postIds.current.add(post.id));
+      setPosts(newPosts);
       nextCursor = response.next_cursor
     })
   };
