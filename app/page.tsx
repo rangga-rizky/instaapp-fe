@@ -85,10 +85,11 @@ export default function Page() {
   useEffect(() => {
     if (!localStorage.getItem('token')) {
       router.push('/auth/login');
+    }else{
+      loadPosts(paginationLimit, nextCursor);
+      window.addEventListener('scroll', handleScroll);
+      return () => window.removeEventListener('scroll', handleScroll);
     }
-    loadPosts(paginationLimit, nextCursor);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (

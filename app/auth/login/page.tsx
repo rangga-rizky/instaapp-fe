@@ -51,7 +51,7 @@ export default function Page() {
       <h2 className={styles.title}>Login</h2>
       <form className={styles.form}>
         <input
-          type="text"
+          type="email"
           name="email"
           placeholder="Email"
           value={email}

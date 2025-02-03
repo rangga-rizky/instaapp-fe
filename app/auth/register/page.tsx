@@ -11,6 +11,7 @@ export default function Page() {
   const [email, setEmail] = useState('');
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
   const router = useRouter();
@@ -28,7 +29,7 @@ export default function Page() {
     const response = await registerUser(req)
     .then(response =>{
       setLoading(false)
-      router.push('/auth/login');
+      setSuccess(true)
     })
     .catch(err => {
       setLoading(false)
@@ -65,7 +66,7 @@ export default function Page() {
           required
         />
         <input
-          type="text"
+          type="email"
           name="email"
           placeholder="Email"
           value={email}
@@ -82,6 +83,8 @@ export default function Page() {
         />
         <button type="submit" disabled={isLoading}>Register</button>
       </form>
+      
+      {success!='' && <p>Registration success. <b><a href="/auth/login">Login</a></b> </p>}
       {error!='' && <ErrorMessage message={error} />}
     </div>
   );
