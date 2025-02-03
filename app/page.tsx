@@ -10,12 +10,14 @@ import type { Post } from './helper/model';
 import PostDetail from './PostDetail';
 import { CREATE_POST_MODAL, POST_DETAIL_MODAL, POST_RESOURCE_TYPE } from './constant';
 import PostCompenent from './Post';
+import next from 'next';
 
 export default function Page() {
+  const paginationLimit = 3;
+  let nextCursor = 0;
   const router = useRouter();
   const [posts, setPosts] = useState<Post[]>([]);
   const [activePostId, setActivePostId] = useState(0);
-  const [page, setPage] = useState(1);
   const [modalOpen, setModalOpen] = useState(null);
 
   const isModelOpen = (modalID) => {
@@ -34,10 +36,15 @@ export default function Page() {
     handleOpenModal(CREATE_POST_MODAL);
   };
 
-  const loadMorePosts = () => {
-    //const newPosts = mockPosts.map(post => ({ ...post, id: post.id + page * mockPosts.length }));
-    //setPosts(prevPosts => [...prevPosts, ...newPosts]);
-    //setPage(prevPage => prevPage + 1);
+  const loadMorePosts = async () => {
+    if (nextCursor === null) {
+      return
+    }
+    await getPosts(paginationLimit, nextCursor)
+    .then(response =>{
+      setPosts(prevPosts => [...prevPosts, ...response.data]);
+      nextCursor = response.next_cursor
+    })
   };
 
   const handleNewPostCreated = (newPost) => {
@@ -45,10 +52,11 @@ export default function Page() {
     handleCLoseModal();
   }
 
-  const loadPosts = async () => {
-    const response = await getPosts()
+  const loadPosts = async (paginationLimit, nextCursor) => {
+    const response = await getPosts(paginationLimit, nextCursor)
     .then(response =>{
-      setPosts(response)
+      setPosts(response.data)
+      nextCursor = response.next_cursor
     })
   };
 
@@ -60,17 +68,17 @@ export default function Page() {
     })
   };
 
+  const handleScroll = () => {
+    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight) {
+      loadMorePosts();
+    }
+  };
+
   useEffect(() => {
     if (!localStorage.getItem('token')) {
       router.push('/auth/login');
     }
-    loadPosts();
-    const handleScroll = () => {
-      if (window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight) {
-        loadMorePosts();
-      }
-    };
-
+    loadPosts(paginationLimit, nextCursor);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);

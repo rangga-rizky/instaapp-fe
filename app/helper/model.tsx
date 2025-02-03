@@ -30,6 +30,12 @@ export interface Post {
     updated_at: string;
 }
 
+
+export interface PostsResponse {
+    data: Post[];
+    next_cursor: number;
+}
+
 export interface Reply {
     id: number;
     message: string;

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LoginRequest, LoginResponse, Post, RegisterRequest, RegisterResponse, Reply, ReplyRequest } from "./model";
+import { LoginRequest, LoginResponse, Post, PostsResponse, RegisterRequest, RegisterResponse, Reply, ReplyRequest } from "./model";
 
 
 const protectedApiClient = axios.create({
@@ -52,11 +52,11 @@ export async function getPost(id: number): Promise<Post> {
   return response.data.data;
 }
 
-export async function getPosts(): Promise<Post[]> {
+export async function getPosts(limit, cursor): Promise<PostsResponse> {
   const response = await protectedApiClient.get(
-    `${process.env.NEXT_PUBLIC_INSTAAPP_SERVICE_URL}/api/posts`
+    `${process.env.NEXT_PUBLIC_INSTAAPP_SERVICE_URL}/api/posts?limit=${limit}&cursor=${cursor}`
   )
-  return response.data.data;
+  return response.data;
 }
 
 export async function createReply(request: ReplyRequest): Promise<Reply> {
