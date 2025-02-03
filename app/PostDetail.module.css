@@ -59,3 +59,31 @@
 .replyButton:hover {
   background-color: #0056b3;
 }
+
+.likes {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.likeButton {
+  margin-left: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.likeButton:hover {
+  fill: #ff0000;
+}
+
+.likeIcon {
+  width: 16px;
+  height: 16px;
+  fill: #888;
+}
+
+.loved .likeIcon {
+  fill: #ff0000;
+}

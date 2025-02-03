@@ -40,6 +40,7 @@ export interface Reply {
     id: number;
     message: string;
     user: User;
+    is_liked_by_user: boolean;
     created_at: string;
     updated_at: string;
 }
